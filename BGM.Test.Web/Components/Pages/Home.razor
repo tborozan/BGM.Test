@@ -1,0 +1,24 @@
+﻿@rendermode InteractiveServer
+
+@page "/"
+@using BGM.Test.Web.DAL
+@using BGM.Test.Web.Services.Interfaces
+@inject ISftpService SftpService
+@inject BgmDbContext DbContext
+
+<MudButton OnClick="ImportInvoices">Import</MudButton>
+<MudButton OnClick="ExportInvoices">Export</MudButton>
+<MudButton OnClick="MarkAllAsPaid">Mark all as paid</MudButton>
+
+<MudTable Items="@Invoices">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Title</MudTh>
+        <MudTh>IsPaid</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="IsPaid">@context.IsPaid</MudTd>
+    </RowTemplate>
+</MudTable>
