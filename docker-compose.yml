@@ -1,0 +1,34 @@
+﻿services:
+  bgm.test.web:
+    image: bgm.test.web
+    build:
+      context: .
+      dockerfile: BGM.Test.Web/Dockerfile
+    depends_on:
+      - bgm.test.db
+      - bgm.test.sftp
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db;Database=bgm;User ID=SA;Password=${DB_PASS};TrustServerCertificate=True;"
+      SFTP__Username: "${SFTP_USER}"
+      SFTP__Password: "${SFTP_PASS}"
+      SFTP__Host: "sftp"
+      SFTP__Port: "22"
+    ports:
+      - 8080:8080
+
+  bgm.test.db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_PASSWORD: "${DB_PASS}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 1433:1433
+
+  bgm.test.sftp:
+    image: atmoz/sftp
+    volumes:
+      - ./inbox:/home/bgm/inbox
+      - ./outbox:/home/bgm/outbox
+    ports:
+      - 2222:22
+    command: "${SFTP_USER}:${SFTP_PASS}:1000"
